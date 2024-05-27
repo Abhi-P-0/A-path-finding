@@ -63,6 +63,15 @@ def make_grid(rows, width):
 
     return grid
 
+def get_Clicked_Pos(pos, rows, width):
+    gap = width // rows
+    y, x = pos
+
+    row = y // gap
+    col = x // gap
+
+    return row, col
+
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 255, 0)
