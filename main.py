@@ -4,12 +4,11 @@ from queue import PriorityQueue
 
 WIDTH = 800
 HEIGHT = WIDTH
+ROWS = 50
 # NumSpots = 0
 Grid = []
 
 def main():
-    NumSpots = input("Grid height (Grid is a square): ")
-    PopulateGrid()
     pygame.init()
 
     window = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -17,18 +16,52 @@ def main():
     window.fill(pygame.Color('white'))
 
     running = True
+
+    grid = make_grid(ROWS, WIDTH)
     
     while running:
+        draw(window, grid, ROWS, WIDTH)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
     pygame.quit()
 
+def draw(win, grid, rows, width):
+    win.fill(WHITE)
 
-def PopulateGrid():
-    pass
+    for row in grid:
+        for spot in row:
+            spot.draw(win)
 
+    draw_grid(win, rows, width)
+
+    pygame.display.update()
+
+
+def draw_grid(win, rows, width):
+    gap = width // rows
+
+    for i in range(rows):
+        pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
+
+        for j in range(rows):
+            pygame.draw.line(win, GREY, (j * gap, 0), ( j * gap, width))
+
+def make_grid(rows, width):
+    grid = []
+    gap = width // rows
+
+    for i in range(rows):
+        grid.append([])
+
+        for j in range(rows):
+            spot = Spot(i, j, gap, rows)
+
+            grid[i].append(spot)
+
+    return grid
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -97,6 +130,9 @@ class Spot:
 
     def update_neighbours(self, grid):
         pass
+
+    def __lt__(self, other):
+        return False
 
 if __name__ == '__main__':
     main()
