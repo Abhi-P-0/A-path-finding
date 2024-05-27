@@ -16,6 +16,8 @@ def main():
     window.fill(pygame.Color('white'))
 
     running = True
+    start = None
+    end = None
 
     grid = make_grid(ROWS, WIDTH)
     
@@ -25,6 +27,24 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+            if pygame.mouse.get_pressed()[0]: # Left mouse button pressed
+                pos = pygame.mouse.get_pos()
+
+                row, col = get_Clicked_Pos(pos, ROWS, WIDTH)
+
+                spot = grid[row][col]
+
+                if not start and spot != end:
+                    start = spot
+                    start.make_start()
+
+                elif not end and spot != start:
+                    end = spot
+                    end.make_end()
+
+                elif spot != start and spot != end:
+                    spot.make_barrier()
 
     pygame.quit()
 
