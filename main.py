@@ -46,6 +46,21 @@ def main():
                 elif spot != start and spot != end:
                     spot.make_barrier()
 
+            if pygame.mouse.get_pressed()[2]: # Right mouse button pressed
+                pos = pygame.mouse.get_pos()
+
+                row, col = get_Clicked_Pos(pos, ROWS, WIDTH)
+
+                spot = grid[row][col]
+
+                spot.reset()
+
+                if spot == start:
+                    start = None
+
+                elif spot == end:
+                    end = None
+
     pygame.quit()
 
 def draw(win, grid, rows, width):
