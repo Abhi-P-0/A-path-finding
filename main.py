@@ -61,13 +61,32 @@ def main():
                 elif spot == end:
                     end = None
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and start and end:
+                    for row in grid:
+                        for spot in row:
+                            spot.update_neighbours(grid)
+
     pygame.quit()
 
-def manhatenDistance(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
+def manhatenDistance(point1, point2):
+    x1, y1 = point1
+    x2, y2 = point2
 
     return abs(x1 - x2) + abs(y1 - y2)
+
+def pathFindAlgo(draw, grid, start, end):
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, start))
+    came_from = {}
+    
+    g_score = {spot: float("inf") for row in grid for spot in row}
+    g_score[start] = 0
+    
+    f_score = {spot: float("inf") for row in grid for spot in row}
+    f_score[start] = manhatenDistance(start.get_position(), end.get_position())
+
 
 def draw(win, grid, rows, width):
     win.fill(WHITE)
