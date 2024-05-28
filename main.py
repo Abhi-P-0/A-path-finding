@@ -63,6 +63,12 @@ def main():
 
     pygame.quit()
 
+def manhatenDistance(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+
+    return abs(x1 - x2) + abs(y1 - y2)
+
 def draw(win, grid, rows, width):
     win.fill(WHITE)
 
@@ -173,7 +179,19 @@ class Spot:
         pygame.draw.rect(window, self.colour, (self.x, self.y, self.width, self.width))
 
     def update_neighbours(self, grid):
-        pass
+        self.neighbours = []
+
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier():
+            self.neighbours.append(grid[self.row + 1][self.col])
+
+        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
+            self.neighbours.append(grid[self.row - 1][self.col])
+
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier():
+            self.neighbours.append(grid[self.row][self.col + 1])
+        
+        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier():
+            self.neighbours.append(grid[self.row][self.col - 1])
 
     def __lt__(self, other):
         return False
