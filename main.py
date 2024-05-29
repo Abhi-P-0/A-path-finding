@@ -67,6 +67,14 @@ def main():
                         for spot in row:
                             spot.update_neighbours(grid)
 
+                    pathFindAlgo(lambda: draw(window, grid, ROWS, WIDTH), grid, start, end)
+
+                if event.key == pygame.K_c:
+                    start = None
+                    end = None
+
+                    grid = make_grid(ROWS, WIDTH)
+
     pygame.quit()
 
 def manhatenDistance(point1, point2):
@@ -87,6 +95,54 @@ def pathFindAlgo(draw, grid, start, end):
     f_score = {spot: float("inf") for row in grid for spot in row}
     f_score[start] = manhatenDistance(start.get_position(), end.get_position())
 
+    open_set_hash = {start}
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        current = open_set.get()[2]
+        open_set_hash.remove(current)
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+
+            end.make_end()
+            
+            return True
+        
+        for neighbour in current.neighbours:
+            temp_g_score = g_score[current] + 1
+
+            if temp_g_score < g_score[neighbour]:
+                came_from[neighbour] = current
+
+                g_score[neighbour] = temp_g_score
+                
+                f_score[neighbour] = temp_g_score + manhatenDistance(neighbour.get_position(), end.get_position())
+
+                if neighbour not in open_set_hash:
+                    count += 1
+
+                    open_set.put((f_score[neighbour], count, neighbour))
+                    open_set_hash.add(neighbour)
+
+                    neighbour.make_open()
+
+        draw()
+
+        if current != start:
+            current.make_closed()
+
+    return False
+
+def reconstruct_path(came_from, current, draw):
+    while current in came_from:
+        current = came_from[current]
+        current.make_path()
+        
+        draw()
 
 def draw(win, grid, rows, width):
     win.fill(WHITE)
