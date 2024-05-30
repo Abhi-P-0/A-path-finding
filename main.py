@@ -9,6 +9,8 @@ ROWS = 50
 Grid = []
 
 def main():
+    ROWS = int(input("Number of Rows: "))
+
     pygame.init()
 
     window = pygame.display.set_mode((WIDTH, HEIGHT))
